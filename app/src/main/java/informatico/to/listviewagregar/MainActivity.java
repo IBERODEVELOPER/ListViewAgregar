@@ -11,6 +11,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,10 +25,26 @@ public class MainActivity extends AppCompatActivity {
     EditText etnumero;
     Button btncrear,btnborrar;
     ListView listatabla;
+
+    private AdView mAdView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.LARGE_BANNER);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+
         /*Instanciamos los objeto de las
         clases y lo instanciamos con el id de la vista*/
         etnumero=(EditText)findViewById(R.id.editTextNumber);
@@ -37,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         btncrear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(etnumero.getText().toString().trim().equalsIgnoreCase("")){
+                    etnumero.setError("Ingrese un valor mayor a 0");
+                }
                 //creamos una variable entero
                 int total=0;
                 /*creamos una variable entero y parseamos
